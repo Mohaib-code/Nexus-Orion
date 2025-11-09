@@ -1,3 +1,5 @@
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { Navbar } from "./_components/navbar";
 import { OrgSidebar } from "./_components/org-sidebar";
 import Sidebar from "./_components/sidebar";
@@ -6,15 +8,20 @@ interface DashBoardLayoutProps {
     children?: React.ReactNode;
 }
 
-const DashBoardLayout = ({ children }: DashBoardLayoutProps) => {
+const DashBoardLayout = async ({ children }: DashBoardLayoutProps) => {
+    const { userId } = await auth();
+
+    if (!userId) {
+        redirect("/");
+    }
+
     return (
         <main className="h-full">
             <Sidebar />
             <div className="pl-[60px] h-full">
                 <div className="flex h-full">
                     <OrgSidebar />
-                    {/* Separator */}
-                    <div className="border-l border-gray-300 h-full" /> 
+                    <div className="border-l border-gray-300 h-full" />
                     <div className="h-full flex-1">
                         <Navbar />
                         {children}

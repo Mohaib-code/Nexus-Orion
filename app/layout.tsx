@@ -4,10 +4,12 @@ import "./globals.css";
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ModalProvider } from "@/providers/modal-provider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Nexus Board",
+    description: "AI-powered innovation workspace for real-time collaboration",
 };
 
 export default function RootLayout({

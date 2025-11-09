@@ -7,9 +7,11 @@ import {
 } from "@clerk/nextjs";
 import { SearchInput } from "./search-input";
 import { InviteButton } from "./invite-button";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
     const { organization } = useOrganization();
+    const router = useRouter();
 
     return (
         <div className="flex items-center gap-x-4 p-5">
@@ -41,7 +43,14 @@ export const Navbar = () => {
                 />
             </div>
             {organization && <InviteButton />}
-            <UserButton />
+            <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                    elements: {
+                        avatarBox: "h-[40px] w-[40px]",
+                    },
+                }}
+            />
         </div>
     );
 };
