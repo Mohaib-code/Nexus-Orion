@@ -11,58 +11,50 @@ const liveblocks = new Liveblocks({
     secret: process.env.NEXT_PUBLIC_LIVEBLOCKS_SECRET_KEY!,
 });
 
-// Cache to prevent repeated Convex queries
-const boardCache = new Map<string, { orgId: string; timestamp: number }>();
-const CACHE_DURATION = 30000; // 30 seconds
-
 export async function POST(request: Request) {
     try {
         const { room } = await request.json();
 
-        const [authorization, user] = await Promise.all([
-            auth(),
-            currentUser(),
-        ]);
+        // Get authenticated user
+        const user = await currentUser();
 
-        if (!authorization || !user) {
+        if (!user) {
+            console.error("No user found");
             return new Response("Unauthorized", { status: 401 });
         }
 
-        // Check cache first
-        const now = Date.now();
-        const cached = boardCache.get(room);
-        let boardOrgId: string;
-
-        if (cached && now - cached.timestamp < CACHE_DURATION) {
-            boardOrgId = cached.orgId;
-        } else {
+        // Verify the board exists
+        try {
             const board = await convex.query(api.board.get, { id: room });
             if (!board) {
+                console.error("Board not found:", room);
                 return new Response("Board not found", { status: 404 });
             }
-            boardOrgId = board.orgId;
-            boardCache.set(room, { orgId: boardOrgId, timestamp: now });
+        } catch (error) {
+            console.error("Error fetching board:", error);
+            return new Response("Error fetching board", { status: 500 });
         }
 
-        if (boardOrgId !== authorization.orgId) {
-            return new Response("Unauthorized", { status: 403 });
-        }
-
+        // Create user info for Liveblocks
         const userInfo = {
-            name: user.firstName || "Anonymous",
-            picture: user.imageUrl!,
+            name: user.firstName || user.username || "Anonymous",
+            picture: user.imageUrl || "",
         };
 
+        // Create Liveblocks session
         const session = liveblocks.prepareSession(user.id, {
             userInfo,
         });
 
+        // Allow access to the room
         if (room) {
             session.allow(room, session.FULL_ACCESS);
         }
 
+        // Authorize and return token
         const { status, body } = await session.authorize();
         return new Response(body, { status });
+
     } catch (error) {
         console.error("Liveblocks auth error:", error);
         return new Response("Internal Server Error", { status: 500 });
