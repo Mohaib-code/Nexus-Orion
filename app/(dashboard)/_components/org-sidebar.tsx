@@ -19,7 +19,7 @@ export const OrgSidebar = () => {
     const favorite = searchParams.get("favorites");
     return (
         <div className="hidden lg:flex flex-col space-y-6 w-[206px] pl-5 pt-5 mr-5">
-            <Link href="/">
+            <Link href="/dashboard">
                 <div className="flex items-center gap-x-2">
                     <Image src="/logo.svg" alt="Logo" height={60} width={60} />
                     <span
@@ -58,7 +58,7 @@ export const OrgSidebar = () => {
                     size="lg"
                     className="font-normal justify-start px-2 w-full"
                 >
-                    <Link href="/">
+                    <Link href="/dashboard">
                         <LayoutDashboard className="h-4 w-4 mr-2" />
                         Team Boards
                     </Link>
@@ -71,7 +71,7 @@ export const OrgSidebar = () => {
                 >
                     <Link
                         href={{
-                            pathname: "/",
+                            pathname: "/dashboard",
                             query: {
                                 favorites: "true",
                             },

@@ -1,27 +1,23 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { Navbar } from "./_components/navbar";
-import { OrgSidebar } from "./_components/org-sidebar";
-import Sidebar from "./_components/sidebar";
+import { Navbar } from "../(dashboard)/_components/navbar";
+import { OrgSidebar } from "../(dashboard)/_components/org-sidebar";
+import Sidebar from "../(dashboard)/_components/sidebar";
+import DashboardContent from "../(dashboard)/_components/dashboard-content";
 
-interface DashBoardLayoutProps {
-    children?: React.ReactNode;
+interface DashboardPageProps {
+    searchParams: {
+        search?: string;
+        favorites?: string;
+    };
 }
 
-const DashBoardLayout = async ({ children }: DashBoardLayoutProps) => {
+const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     const { userId } = await auth();
 
     if (!userId) {
         redirect("/");
     }
-    interface DashBoardLayoutProps {
-        children?: React.ReactNode;
-    }
-
-    const DashBoardLayout = ({ children }: DashBoardLayoutProps) => {
-        return <>{children}</>;
-    };
-
 
     return (
         <main className="h-full">
@@ -32,7 +28,7 @@ const DashBoardLayout = async ({ children }: DashBoardLayoutProps) => {
                     <div className="border-l border-gray-300 h-full" />
                     <div className="h-full flex-1">
                         <Navbar />
-                        {children}
+                        <DashboardContent searchParams={searchParams} />
                     </div>
                 </div>
             </div>
@@ -40,4 +36,4 @@ const DashBoardLayout = async ({ children }: DashBoardLayoutProps) => {
     );
 };
 
-export default DashBoardLayout;
+export default DashboardPage;
