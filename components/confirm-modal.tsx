@@ -48,14 +48,20 @@ export const ConfirmModal = ({
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>{header}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        {description}
+                    <AlertDialogDescription asChild>
+                        <div className="space-y-2">
+                            {typeof description === 'string' ? (
+                                <p>{description}</p>
+                            ) : (
+                                description
+                            )}
+                        </div>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                {/* TODO: Automatically focus the input tag */}
                 <Input
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
+                    placeholder={`Type "${title}" to confirm`}
                 />
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
