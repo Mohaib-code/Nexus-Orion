@@ -361,7 +361,8 @@ export default function HomePage() {
                     </div>
 
                     <div className="mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
-                        <p>© 2024 Nexus Board. Built with Next.js, Convex, Liveblocks & AI</p>
+                        <p>© 2025 Nexus Board. All Rights Reserved.
+                        </p>
                     </div>
                 </div>
             </footer>
@@ -533,3 +534,4 @@ function ChatBubble({
         </div>
     );
 }
+
